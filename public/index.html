@@ -16,37 +16,102 @@
   <h1>Tarjetas de Crédito</h1>
   <div id="cards-container"></div>
 
+
+
+
+
+
+
+<!-- new date to create api         2 -->
+<h2>Agregar Nueva Tarjeta</h2>
+<form id="card-form">
+  <input type="text" name="title" placeholder="Título" required><br>
+  <input type="text" name="owner" placeholder="Propietario" required><br>
+  <input type="text" name="cardNumber" placeholder="Número de Tarjeta" required><br>
+  <input type="text" name="expiration" placeholder="Vencimiento (MM/YY)" required><br>
+  <input type="text" name="issuer" placeholder="Banco Emisor" required><br>
+  <select name="type" required>
+    <option value="Crédito">Crédito</option>
+    <option value="Débito">Débito</option>
+  </select><br>
+  <input type="text" name="limite" placeholder="Límite de Crédito (ej: ฿5,000)" required><br>
+  <input type="text" name="estado" placeholder="Estado (ej: Activa)" required><br>
+  <button type="submit">Agregar Tarjeta</button>
+</form>
+<!-- new date to create api         2 -->
+
+
+
+
+
+
+
   <script>
-    // Fetch the card data from the server
-    fetch('/api/cards')
-      .then(response => response.json())
-      .then(cards => {
-        const container = document.getElementById('cards-container');
+
+// second script generate dinamic 
+
+document.getElementById('card-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const newCard = {
+    title: form.title.value,
+    owner: form.owner.value,
+    cardNumber: form.cardNumber.value,
+    expiration: form.expiration.value,
+    issuer: form.issuer.value,
+    type: form.type.value,
+    details: [
+      { label: "Límite de crédito", value: form.limite.value },
+      { label: "Estado", value: form.estado.value }
+    ]
+  };
+
+  const response = await fetch('/api/create', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(newCard)
+  });
+
+  if (response.ok) {
+    alert('Tarjeta agregada con éxito');
+    location.reload();  // or call the render function again
+  } else {
+    alert('Error al agregar tarjeta');
+  }
+});
+
+//   firts file to make static
+// Fetch the card data from the server
+    // fetch('/api/cards')
+    //   .then(response => response.json())
+    //   .then(cards => {
+    //     const container = document.getElementById('cards-container');
         
-        // Loop through the cards and display them
-        cards.forEach(card => {
-          const cardElement = document.createElement('div');
-          cardElement.classList.add('card');
+    //     // Loop through the cards and display them
+    //     cards.forEach(card => {
+    //       const cardElement = document.createElement('div');
+    //       cardElement.classList.add('card');
           
-          cardElement.innerHTML = `
-            <h2>${card.title}</h2>
-            <p><strong>Owner:</strong> ${card.owner}</p>
-            <p><strong>Card Number:</strong> ${card.cardNumber}</p>
-            <p><strong>Expiration:</strong> ${card.expiration}</p>
-            <p><strong>Issuer:</strong> ${card.issuer}</p>
-            <p><strong>Type:</strong> ${card.type}</p>
-            <div class="details">
-              <h3>Details:</h3>
-              <ul>
-                ${card.details.map(detail => `<li><strong>${detail.label}:</strong> ${detail.value}</li>`).join('')}
-              </ul>
-            </div>
-          `;
+    //       cardElement.innerHTML = `
+    //         <h2>${card.title}</h2>
+    //         <p><strong>Owner:</strong> ${card.owner}</p>
+    //         <p><strong>Card Number:</strong> ${card.cardNumber}</p>
+    //         <p><strong>Expiration:</strong> ${card.expiration}</p>
+    //         <p><strong>Issuer:</strong> ${card.issuer}</p>
+    //         <p><strong>Type:</strong> ${card.type}</p>
+    //         <div class="details">
+    //           <h3>Details:</h3>
+    //           <ul>
+    //             ${card.details.map(detail => `<li><strong>${detail.label}:</strong> ${detail.value}</li>`).join('')}
+    //           </ul>
+    //         </div>
+    //       `;
           
-          container.appendChild(cardElement);
-        });
-      })
-      .catch(err => console.error('Error fetching card data:', err));
+    //       container.appendChild(cardElement);
+    //     });
+    //   })
+    //   .catch(err => console.error('Error fetching card data:', err));
   </script>
 </body>
 </html>

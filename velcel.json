@@ -1,10 +1,12 @@
 {
   "version": 2,
   "builds": [
-    { "src": "api/cards.js", "use": "@vercel/node" }
+    { "src": "api/cards.js", "use": "@vercel/node" },
+    { "src": "api/create.js", "use": "@vercel/node" }
   ],
   "routes": [
     { "src": "/api/cards", "dest": "/api/cards.js" },
+    { "src": "/api/create", "dest": "/api/create.js" },
     { "src": "/", "dest": "/public/index.html" }
   ]
 }
