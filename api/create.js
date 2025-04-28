@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       // Obtener tarjetas actuales
-      const getRes = await fetch(`https://api.jsonbin.io/v3/b/${6810063a8a456b7966937a65}/latest`, {
+      const getRes = await fetch(`https://api.jsonbin.io/v3/b/${a8a456b7966937a65}/latest`, {
         headers: {
           'X-Master-Key': API_KEY
         }
@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       const updatedCards = [...existingData.record, newCard];
 
       // Actualizar el bin con las nuevas tarjetas
-      const putRes = await fetch(`https://api.jsonbin.io/v3/b/${6810063a8a456b7966937a65}`, {
+      const putRes = await fetch(`https://api.jsonbin.io/v3/b/${a8a456b7966937a65}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
