@@ -45,81 +45,50 @@
 
 
 <script>
-  document.getElementById('card-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-  
-    const form = e.target;
-    const newCard = {
-      title: form.title.value.trim(),
-      owner: form.owner.value.trim(),
-      cardNumber: form.cardNumber.value.trim(),
-      expiration: form.expiration.value.trim(),
-      issuer: form.issuer.value.trim(),
-      type: form.type.value,
-      details: [
-        { label: "Límite de crédito", value: form.limite.value.trim() },
-        { label: "Estado", value: form.estado.value.trim() }
-      ]
-    };
-  
-    try {
-      const response = await fetch('/api/create.js', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(newCard)
-      });
-  
-      const result = await response.json();
-  
-      if (response.ok) {
-        alert('✅ Tarjeta agregada con éxito');
-        location.reload(); // o actualizar UI sin recargar
-      } console.error('Error en respuesta del servidor:', result);
-alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
 
-console.error('Error en respuesta del servidor:', result);
-alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
-
-    } catch (error) {
-      console.error('Error en fetch:', error);
-      alert('❌ Error al conectar con el servidor');
-    }
-  });
-
-// second script generate dinamic 
 
 document.getElementById('card-form').addEventListener('submit', async (e) => {
   e.preventDefault();
 
   const form = e.target;
   const newCard = {
-    title: form.title.value,
-    owner: form.owner.value,
-    cardNumber: form.cardNumber.value,
-    expiration: form.expiration.value,
-    issuer: form.issuer.value,
+    title: form.title.value.trim(),
+    owner: form.owner.value.trim(),
+    cardNumber: form.cardNumber.value.trim(),
+    expiration: form.expiration.value.trim(),
+    issuer: form.issuer.value.trim(),
     type: form.type.value,
     details: [
-      { label: "Límite de crédito", value: form.limite.value },
-      { label: "Estado", value: form.estado.value }
+      { label: "Límite de crédito", value: form.limite.value.trim() },
+      { label: "Estado", value: form.estado.value.trim() }
     ]
   };
 
-  const response = await fetch('/api/create', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(newCard)
-  });
+  try {
+    const response = await fetch('/api/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newCard)
+    });
 
-  if (response.ok) {
-    alert('Tarjeta agregada con éxito');
-    location.reload();  // or call the render function again
-  } else {
-    alert('Error al agregar tarjeta');
+    const result = await response.json();
+
+    if (response.ok) {
+      alert('✅ Tarjeta agregada con éxito');
+      location.reload(); // o actualizar sin recargar
+    } else {
+      console.error('Error en respuesta del servidor:', result);
+      alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+    }
+
+  } catch (error) {
+    console.error('Error en fetch:', error);
+    alert('❌ Error al conectar con el servidor');
   }
 });
+
 
 //   firts file to make static
 // Fetch the card data from the server
