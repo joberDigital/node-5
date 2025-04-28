@@ -1,5 +1,5 @@
 export default async function handler(req, res) {
-  const BIN_ID = 'TU_BIN_ID';
+  const BIN_ID = '680ff7038960c979a58f36eb';
   const API_KEY = '$2a$10$3zPtoS2tHB1UJZSlUKtj6etXIpYiuLXoxIM4r.HJlL7pz0EAVkGc2';
 
   try {
