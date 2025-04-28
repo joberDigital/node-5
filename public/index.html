@@ -76,10 +76,12 @@
       if (response.ok) {
         alert('✅ Tarjeta agregada con éxito');
         location.reload(); // o actualizar UI sin recargar
-      } else {
-        console.error('Error en respuesta del servidor:', result);
-        alert('❌ Error al agregar tarjeta: ' + (result.message || 'desconocido'));
-      }
+      } console.error('Error en respuesta del servidor:', result);
+alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+
+console.error('Error en respuesta del servidor:', result);
+alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+
     } catch (error) {
       console.error('Error en fetch:', error);
       alert('❌ Error al conectar con el servidor');

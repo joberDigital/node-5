@@ -43,10 +43,11 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: 'Tarjeta creada' });
 
-    } catch (error) {
-      console.error('ERROR EN /api/create:', error.message);
-      res.status(500).json({ message: 'Error interno del servidor' });
-    }
+    } 
+   catch (error) {
+    console.error('ERROR DETALLADO EN /api/create:', error);
+    res.status(500).json({ message: 'Error interno del servidor', detail: error.message });
+  }
   } else {
     res.status(405).json({ message: 'Método no permitido' });
   }
