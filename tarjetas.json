@@ -1,0 +1,27 @@
+[
+  {
+    "title": "Tarjeta Uno",
+    "owner": "Juan Pérez",
+    "cardNumber": "1234 5678 9876 5432",
+    "expiration": "12/25",
+    "issuer": "Banco Ejemplo",
+    "type": "Crédito",
+    "details": [
+      { "label": "Límite de crédito", "value": "\u0e3f5,000" },
+      { "label": "Estado", "value": "Activa" }
+    ]
+  },
+  {
+    "title": "Tarjeta Dos",
+    "owner": "Ana Gómez",
+    "cardNumber": "2345 6789 8765 4321",
+    "expiration": "01/26",
+    "issuer": "Banco Otro",
+    "type": "Débito",
+    "details": [
+      { "label": "Límite de crédito", "value": "\u0e3f2,000" },
+      { "label": "Estado", "value": "Inactiva" }
+    ]
+  }
+]
+

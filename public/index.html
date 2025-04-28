@@ -1,0 +1,52 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjetas</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .card { border: 1px solid #ccc; padding: 20px; margin: 10px; border-radius: 5px; }
+    h2 { color: #333; }
+    .details { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Tarjetas de Crédito</h1>
+  <div id="cards-container"></div>
+
+  <script>
+    // Fetch the card data from the server
+    fetch('/api/cards')
+      .then(response => response.json())
+      .then(cards => {
+        const container = document.getElementById('cards-container');
+        
+        // Loop through the cards and display them
+        cards.forEach(card => {
+          const cardElement = document.createElement('div');
+          cardElement.classList.add('card');
+          
+          cardElement.innerHTML = `
+            <h2>${card.title}</h2>
+            <p><strong>Owner:</strong> ${card.owner}</p>
+            <p><strong>Card Number:</strong> ${card.cardNumber}</p>
+            <p><strong>Expiration:</strong> ${card.expiration}</p>
+            <p><strong>Issuer:</strong> ${card.issuer}</p>
+            <p><strong>Type:</strong> ${card.type}</p>
+            <div class="details">
+              <h3>Details:</h3>
+              <ul>
+                ${card.details.map(detail => `<li><strong>${detail.label}:</strong> ${detail.value}</li>`).join('')}
+              </ul>
+            </div>
+          `;
+          
+          container.appendChild(cardElement);
+        });
+      })
+      .catch(err => console.error('Error fetching card data:', err));
+  </script>
+</body>
+</html>
