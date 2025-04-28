@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -45,8 +44,47 @@
 
 
 
-
-  <script>
+<script>
+  document.getElementById('card-form').addEventListener('submit', async (e) => {
+    e.preventDefault();
+  
+    const form = e.target;
+    const newCard = {
+      title: form.title.value.trim(),
+      owner: form.owner.value.trim(),
+      cardNumber: form.cardNumber.value.trim(),
+      expiration: form.expiration.value.trim(),
+      issuer: form.issuer.value.trim(),
+      type: form.type.value,
+      details: [
+        { label: "Límite de crédito", value: form.limite.value.trim() },
+        { label: "Estado", value: form.estado.value.trim() }
+      ]
+    };
+  
+    try {
+      const response = await fetch('/api/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(newCard)
+      });
+  
+      const result = await response.json();
+  
+      if (response.ok) {
+        alert('✅ Tarjeta agregada con éxito');
+        location.reload(); // o actualizar UI sin recargar
+      } else {
+        console.error('Error en respuesta del servidor:', result);
+        alert('❌ Error al agregar tarjeta: ' + (result.message || 'desconocido'));
+      }
+    } catch (error) {
+      console.error('Error en fetch:', error);
+      alert('❌ Error al conectar con el servidor');
+    }
+  });
 
 // second script generate dinamic 
 
@@ -112,6 +150,7 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
     //     });
     //   })
     //   .catch(err => console.error('Error fetching card data:', err));
-  </script>
+ 
+</script>
 </body>
 </html>
