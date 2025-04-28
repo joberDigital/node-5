@@ -1,10 +1,17 @@
-import fs from 'fs';
-import path from 'path';
+export default async function handler(req, res) {
+  const BIN_ID = 'TU_BIN_ID';
+  const API_KEY = '$2a$10$3zPtoS2tHB1UJZSlUKtj6etXIpYiuLXoxIM4r.HJlL7pz0EAVkGc2';
 
-export default function handler(req, res) {
-  const filePath = path.join(process.cwd(), 'tarjetas.json');
-  const data = fs.readFileSync(filePath, 'utf-8');
-  const cards = JSON.parse(data);
-
-  res.status(200).json(cards);
+  try {
+    const response = await fetch(`https://api.jsonbin.io/v3/b/${ff7038960c979a58f36eb}/latest`, {
+      headers: {
+        'X-Master-Key': API_KEY
+      }
+    });
+    const data = await response.json();
+    res.status(200).json(data.record);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error al obtener tarjetas' });
+  }
 }
