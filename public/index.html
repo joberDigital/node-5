@@ -43,49 +43,21 @@
 
 
 
-<script>
-  async function cargarTarjetas() {
-    try {
-      const response = await fetch('/api/cards');
-      const cards = await response.json();
-  
-      if (!Array.isArray(cards)) {
-        throw new Error('La respuesta no es un array.');
-      }
-  
-      const container = document.getElementById('cards-container');
-      container.innerHTML = ''; // Limpia antes de renderizar
-  
-      cards.forEach(card => {
-        const cardElement = document.createElement('div');
-        cardElement.className = 'card';
-  
-        cardElement.innerHTML = `
-          <h2>${card.title}</h2>
-          <p><strong>Propietario:</strong> ${card.owner}</p>
-          <p><strong>Número:</strong> ${card.cardNumber}</p>
-          <p><strong>Vencimiento:</strong> ${card.expiration}</p>
-          <p><strong>Banco:</strong> ${card.issuer}</p>
-          <p><strong>Tipo:</strong> ${card.type}</p>
-          <div class="details">
-            ${card.details?.map(d => `<p><strong>${d.label}:</strong> ${d.value}</p>`).join('')}
-          </div>
-        `;
-  
-        container.appendChild(cardElement);
-      });
-  
-    } catch (error) {
-      console.error('Error al cargar tarjetas:', error);
-      const container = document.getElementById('cards-container');
-      container.innerHTML = `<p style="color:red;">❌ Error al cargar tarjetas</p>`;
-    }
-  }
-  
 
+<script>
+
+// form.querySelector('button[type="submit"]').disabled = true;
+// // y luego en el `finally`:
+// form.querySelector('button[type="submit"]').disabled = false;
+
+let isSubmitting = false;  // Evita múltiples envíos
 
 document.getElementById('card-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+
+  if (isSubmitting) return; // Si ya está enviando, no hace nada
+
+  isSubmitting = true;
 
   const form = e.target;
   const newCard = {
@@ -104,9 +76,7 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
   try {
     const response = await fetch('/api/create', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newCard)
     });
 
@@ -114,7 +84,7 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
 
     if (response.ok) {
       alert('✅ Tarjeta agregada con éxito');
-      location.reload(); // o actualizar sin recargar
+      location.reload(); // O vuelve a llamar a cargarTarjetas()
     } else {
       console.error('Error en respuesta del servidor:', result);
       alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
@@ -123,8 +93,105 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
   } catch (error) {
     console.error('Error en fetch:', error);
     alert('❌ Error al conectar con el servidor');
+  } finally {
+    isSubmitting = false; // Permitir otro intento
   }
 });
+
+
+//2
+//   async function cargarTarjetas() {
+//     try {
+//       const response = await fetch('/api/cards');
+//       const cards = await response.json();
+  
+//       if (!Array.isArray(cards)) {
+//         throw new Error('La respuesta no es un array.');
+//       }
+  
+//       const container = document.getElementById('cards-container');
+//       container.innerHTML = ''; // Limpia antes de renderizar
+  
+//       cards.forEach(card => {
+//         const cardElement = document.createElement('div');
+//         cardElement.className = 'card';
+  
+//         cardElement.innerHTML = `
+//           <h2>${card.title}</h2>
+//           <p><strong>Propietario:</strong> ${card.owner}</p>
+//           <p><strong>Número:</strong> ${card.cardNumber}</p>
+//           <p><strong>Vencimiento:</strong> ${card.expiration}</p>
+//           <p><strong>Banco:</strong> ${card.issuer}</p>
+//           <p><strong>Tipo:</strong> ${card.type}</p>
+//           <div class="details">
+//             ${card.details?.map(d => `<p><strong>${d.label}:</strong> ${d.value}</p>`).join('')}
+//           </div>
+//         `;
+  
+//         container.appendChild(cardElement);
+//       });
+  
+//     } catch (error) {
+//       console.error('Error al cargar tarjetas:', error);
+//       const container = document.getElementById('cards-container');
+//       container.innerHTML = `<p style="color:red;">❌ Error al cargar tarjetas</p>`;
+//     }
+//   }
+  
+
+
+// document.getElementById('card-form').addEventListener('submit', async (e) => {
+//   e.preventDefault();
+
+//   const form = e.target;
+//   const newCard = {
+//     title: form.title.value.trim(),
+//     owner: form.owner.value.trim(),
+//     cardNumber: form.cardNumber.value.trim(),
+//     expiration: form.expiration.value.trim(),
+//     issuer: form.issuer.value.trim(),
+//     type: form.type.value,
+//     details: [
+//       { label: "Límite de crédito", value: form.limite.value.trim() },
+//       { label: "Estado", value: form.estado.value.trim() }
+//     ]
+//   };
+
+//   try {
+//     const response = await fetch('/api/create', {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json'
+//       },
+//       body: JSON.stringify(newCard)
+//     });
+
+//     const result = await response.json();
+
+//     if (response.ok) {
+//       alert('✅ Tarjeta agregada con éxito');
+//       location.reload(); // o actualizar sin recargar
+//     } else {
+//       console.error('Error en respuesta del servidor:', result);
+//       alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+//     }
+
+//   } catch (error) {
+//     console.error('Error en fetch:', error);
+//     alert('❌ Error al conectar con el servidor');
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+//1
 
 
 //   firts file to make static
@@ -163,7 +230,9 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
 
 
     // Ejecutar al cargar la página
-   window.addEventListener('DOMContentLoaded', cargarTarjetas);
+  //  window.addEventListener('DOMContentLoaded', cargarTarjetas);
+
+
 
 </script>
 </body>
