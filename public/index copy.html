@@ -1,0 +1,167 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tarjetas</title>
+  <style>
+    body { font-family: Arial, sans-serif; }
+    .card { border: 1px solid #ccc; padding: 20px; margin: 10px; border-radius: 5px; }
+    h2 { color: #333; }
+    .details { margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>Tarjetas de Crédito</h1>
+  <div id="cards-container"></div>
+
+
+
+
+
+
+
+<!-- new date to create api         2 -->
+<h2>Agregar Nueva Tarjeta</h2>
+<form id="card-form">
+  <input type="text" name="title" placeholder="Título" ><br>
+  <input type="text" name="owner" placeholder="Propietario" ><br>
+  <input type="text" name="cardNumber" placeholder="Número de Tarjeta" ><br>
+  <input type="text" name="expiration" placeholder="Vencimiento (MM/YY)" ><br>
+  <input type="text" name="issuer" placeholder="Banco Emisor" ><br>
+  <select name="type" >
+    <option value="Crédito">Crédito</option>
+    <option value="Débito">Débito</option>
+  </select><br>
+  <input type="text" name="limite" placeholder="Límite de Crédito (ej: ฿5,000)" ><br>
+  <input type="text" name="estado" placeholder="Estado (ej: Activa)" ><br>
+  <button type="submit">Agregar Tarjeta</button>
+</form>
+<!-- new date to create api         2 -->
+
+
+
+
+
+<script>
+  async function cargarTarjetas() {
+    try {
+      const response = await fetch('/api/cards');
+      const cards = await response.json();
+  
+      if (!Array.isArray(cards)) {
+        throw new Error('La respuesta no es un array.');
+      }
+  
+      const container = document.getElementById('cards-container');
+      container.innerHTML = ''; // Limpia antes de renderizar
+  
+      cards.forEach(card => {
+        const cardElement = document.createElement('div');
+        cardElement.className = 'card';
+  
+        cardElement.innerHTML = `
+          <h2>${card.title}</h2>
+          <p><strong>Propietario:</strong> ${card.owner}</p>
+          <p><strong>Número:</strong> ${card.cardNumber}</p>
+          <p><strong>Vencimiento:</strong> ${card.expiration}</p>
+          <p><strong>Banco:</strong> ${card.issuer}</p>
+          <p><strong>Tipo:</strong> ${card.type}</p>
+          <div class="details">
+            ${card.details?.map(d => `<p><strong>${d.label}:</strong> ${d.value}</p>`).join('')}
+          </div>
+        `;
+  
+        container.appendChild(cardElement);
+      });
+  
+    } catch (error) {
+      console.error('Error al cargar tarjetas:', error);
+      const container = document.getElementById('cards-container');
+      container.innerHTML = `<p style="color:red;">❌ Error al cargar tarjetas</p>`;
+    }
+  }
+  
+
+
+document.getElementById('card-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const form = e.target;
+  const newCard = {
+    title: form.title.value.trim(),
+    owner: form.owner.value.trim(),
+    cardNumber: form.cardNumber.value.trim(),
+    expiration: form.expiration.value.trim(),
+    issuer: form.issuer.value.trim(),
+    type: form.type.value,
+    details: [
+      { label: "Límite de crédito", value: form.limite.value.trim() },
+      { label: "Estado", value: form.estado.value.trim() }
+    ]
+  };
+
+  try {
+    const response = await fetch('/api/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newCard)
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert('✅ Tarjeta agregada con éxito');
+      location.reload(); // o actualizar sin recargar
+    } else {
+      console.error('Error en respuesta del servidor:', result);
+      alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+    }
+
+  } catch (error) {
+    console.error('Error en fetch:', error);
+    alert('❌ Error al conectar con el servidor');
+  }
+});
+
+
+//   firts file to make static
+// Fetch the card data from the server
+    // fetch('/api/cards')
+    //   .then(response => response.json())
+    //   .then(cards => {
+    //     const container = document.getElementById('cards-container');
+        
+    //     // Loop through the cards and display them
+    //     cards.forEach(card => {
+    //       const cardElement = document.createElement('div');
+    //       cardElement.classList.add('card');
+          
+    //       cardElement.innerHTML = `
+    //         <h2>${card.title}</h2>
+    //         <p><strong>Owner:</strong> ${card.owner}</p>
+    //         <p><strong>Card Number:</strong> ${card.cardNumber}</p>
+    //         <p><strong>Expiration:</strong> ${card.expiration}</p>
+    //         <p><strong>Issuer:</strong> ${card.issuer}</p>
+    //         <p><strong>Type:</strong> ${card.type}</p>
+    //         <div class="details">
+    //           <h3>Details:</h3>
+    //           <ul>
+    //             ${card.details.map(detail => `<li><strong>${detail.label}:</strong> ${detail.value}</li>`).join('')}
+    //           </ul>
+    //         </div>
+    //       `;
+          
+    //       container.appendChild(cardElement);
+    //     });
+    //   })
+    //   .catch(err => console.error('Error fetching card data:', err));
+   // Ejecutar al cargar la página
+  window.addEventListener('DOMContentLoaded', cargarTarjetas);
+
+</script>
+</body>
+</html>
