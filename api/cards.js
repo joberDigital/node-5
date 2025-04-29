@@ -9,7 +9,6 @@ export default async function handler(req, res) {
     });
     const data = await response.json();
     res.status(200).json(data.record);
-    console.log('API_KEY cargada:', process.env.JSONBIN_API_KEY);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Error al obtener tarjetas' });

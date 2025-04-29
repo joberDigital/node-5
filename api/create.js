@@ -2,8 +2,9 @@
 
       export default async function handler(req, res) {
         const BIN_ID = '6810063a8a456b7966937a65';
-        const API_KEY = '$2a$10$3zPtoS2tHB1UJZSlUKtj6etXIpYiuLXoxIM4r.HJlL7pz0EAVkGc2';
-        
+     
+        const API_KEY = process.env.JSONBIN_API_KEY;
+
         if (req.method === 'POST') {
           try {
             // 1. Obtener tarjetas actuales
@@ -43,7 +44,8 @@
             }
       
             res.status(200).json({ message: 'Tarjeta creada' });
-      
+            console.log('API_KEY cargada:', process.env.JSONBIN_API_KEY);
+
           } catch (error) {
             console.error('ERROR EN /api/create:', error.message);
             res.status(500).json({ message: 'Error interno del servidor' });
