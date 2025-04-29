@@ -43,20 +43,12 @@
 
 
 
-
 <script>
 
-// form.querySelector('button[type="submit"]').disabled = true;
-// // y luego en el `finally`:
-// form.querySelector('button[type="submit"]').disabled = false;
-
-
-
-
-//2
+form.querySelector('button[type="submit"]').disabled = true;
+// y luego en el `finally`:
+form.querySelector('button[type="submit"]').disabled = false;
   async function cargarTarjetas() {
-
-
     try {
       const response = await fetch('/api/cards');
       const cards = await response.json();
@@ -99,10 +91,12 @@
 
 document.getElementById('card-form').addEventListener('submit', async (e) => {
   e.preventDefault();
+
   if (isSubmitting) return; // Si ya está enviando, no hace nada
 
-  isSubmitting = true;
   const form = e.target;
+  isSubmitting = true;
+
   const newCard = {
     title: form.title.value.trim(),
     owner: form.owner.value.trim(),
@@ -145,17 +139,6 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
 });
 
 
-
-
-
-
-
-
-
-
-//1
-
-
 //   firts file to make static
 // Fetch the card data from the server
     // fetch('/api/cards')
@@ -187,14 +170,8 @@ document.getElementById('card-form').addEventListener('submit', async (e) => {
     //     });
     //   })
     //   .catch(err => console.error('Error fetching card data:', err));
-
-
-
-
-    // Ejecutar al cargar la página
-    window.addEventListener('DOMContentLoaded', cargarTarjetas);
-
-
+   // Ejecutar al cargar la página
+   window.addEventListener('DOMContentLoaded', cargarTarjetas);
 
 </script>
 </body>
