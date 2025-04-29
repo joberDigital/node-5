@@ -4,6 +4,7 @@
         const BIN_ID = '6810063a8a456b7966937a65';
      
         const API_KEY = process.env.JSONBIN_API_KEY;
+        console.log('API_KEY cargada:', process.env.JSONBIN_API_KEY);
 
         if (req.method === 'POST') {
           try {
@@ -44,7 +45,6 @@
             }
       
             res.status(200).json({ message: 'Tarjeta creada' });
-            console.log('API_KEY cargada:', process.env.JSONBIN_API_KEY);
 
           } catch (error) {
             console.error('ERROR EN /api/create:', error.message);
