@@ -44,7 +44,6 @@
             }
       
             res.status(200).json({ message: 'Tarjeta creada' });
-            console.log('API_KEY cargada:', process.env.JSONBIN_API_KEY);
 
           } catch (error) {
             console.error('ERROR EN /api/create:', error.message);
