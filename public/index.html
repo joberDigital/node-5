@@ -13,6 +13,7 @@
 </head>
 <body>
   <h1>Tarjetas de Crédito</h1>
+  
   <div id="cards-container"></div>
 
 
@@ -37,6 +38,7 @@
   <input type="text" name="estado" placeholder="Estado (ej: Activa)" ><br>
   <button type="submit">Agregar Tarjeta</button>
 </form>
+<div id="loading-indicator" style="display:none; color: #666; font-style: italic;">Cargando tarjetas...</div>
 <!-- new date to create api         2 -->
 
 
@@ -44,12 +46,16 @@
 
 
 <script>
-
 let isLoadingCards = false;
 
 async function cargarTarjetas() {
-  if (isLoadingCards) return; // Ya se está cargando
+  if (isLoadingCards) return;
   isLoadingCards = true;
+
+  const loadingEl = document.getElementById('loading-indicator');
+  const container = document.getElementById('cards-container');
+  loadingEl.style.display = 'block';
+  container.innerHTML = ''; // Limpia antes de renderizar
 
   try {
     const response = await fetch('/api/cards');
@@ -58,9 +64,6 @@ async function cargarTarjetas() {
     if (!Array.isArray(cards)) {
       throw new Error('La respuesta no es un array.');
     }
-
-    const container = document.getElementById('cards-container');
-    container.innerHTML = ''; // Limpia antes de renderizar
 
     cards.forEach(card => {
       const cardElement = document.createElement('div');
@@ -83,13 +86,12 @@ async function cargarTarjetas() {
 
   } catch (error) {
     console.error('Error al cargar tarjetas:', error);
-    const container = document.getElementById('cards-container');
     container.innerHTML = `<p style="color:red;">❌ Error al cargar tarjetas</p>`;
   } finally {
-    isLoadingCards = false; // Permitir otra carga
+    loadingEl.style.display = 'none';
+    isLoadingCards = false;
   }
 }
-
 
 
 
@@ -135,47 +137,47 @@ async function cargarTarjetas() {
   
 
 
-// document.getElementById('card-form').addEventListener('submit', async (e) => {
-//   e.preventDefault();
+document.getElementById('card-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
 
-//   const form = e.target;
-//   const newCard = {
-//     title: form.title.value.trim(),
-//     owner: form.owner.value.trim(),
-//     cardNumber: form.cardNumber.value.trim(),
-//     expiration: form.expiration.value.trim(),
-//     issuer: form.issuer.value.trim(),
-//     type: form.type.value,
-//     details: [
-//       { label: "Límite de crédito", value: form.limite.value.trim() },
-//       { label: "Estado", value: form.estado.value.trim() }
-//     ]
-//   };
+  const form = e.target;
+  const newCard = {
+    title: form.title.value.trim(),
+    owner: form.owner.value.trim(),
+    cardNumber: form.cardNumber.value.trim(),
+    expiration: form.expiration.value.trim(),
+    issuer: form.issuer.value.trim(),
+    type: form.type.value,
+    details: [
+      { label: "Límite de crédito", value: form.limite.value.trim() },
+      { label: "Estado", value: form.estado.value.trim() }
+    ]
+  };
 
-//   try {
-//     const response = await fetch('/api/create', {
-//       method: 'POST',
-//       headers: {
-//         'Content-Type': 'application/json'
-//       },
-//       body: JSON.stringify(newCard)
-//     });
+  try {
+    const response = await fetch('/api/create', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(newCard)
+    });
 
-//     const result = await response.json();
+    const result = await response.json();
 
-//     if (response.ok) {
-//       alert('✅ Tarjeta agregada con éxito');
-//       location.reload(); // o actualizar sin recargar
-//     } else {
-//       console.error('Error en respuesta del servidor:', result);
-//       alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
-//     }
+    if (response.ok) {
+      alert('✅ Tarjeta agregada con éxito');
+      location.reload(); // o actualizar sin recargar
+    } else {
+      console.error('Error en respuesta del servidor:', result);
+      alert(`❌ Error al agregar tarjeta: ${result.message}\nDetalle: ${result.detail || 'sin detalles'}`);
+    }
 
-//   } catch (error) {
-//     console.error('Error en fetch:', error);
-//     alert('❌ Error al conectar con el servidor');
-//   }
-// });
+  } catch (error) {
+    console.error('Error en fetch:', error);
+    alert('❌ Error al conectar con el servidor');
+  }
+});
 
 
 
